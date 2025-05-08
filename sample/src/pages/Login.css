@@ -1,0 +1,39 @@
+/* Login.css */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  
+  
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    height: 100%;
+    background-image: url('./background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+.login-card {
+    width: 350px;
+    height: 100px;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+.login-container {
+    padding-left: 500px;
+
+}
+.logo {
+    width: 150px;
+    
+    object-fit: contain; /* or cover, depending on your desired effect */
+  }
+  

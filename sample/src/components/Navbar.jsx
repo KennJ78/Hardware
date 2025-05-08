@@ -1,2 +1,10 @@
-import React from 'react';
-import '../App.css';
+// src/components/Navbar.jsx
+
+export default function Navbar() {
+    return (
+      <nav>
+        <h1>Navbar</h1>
+      </nav>
+    );
+  }
+  
