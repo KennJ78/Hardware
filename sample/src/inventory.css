@@ -1,0 +1,93 @@
+.inventory-container {
+    padding: 20px;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+  }
+  
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  
+  h2 {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .search-section {
+    position: relative;
+    max-width: 400px;
+    flex: 1;
+    margin: 0 10px;
+  }
+  
+  .search-section input {
+    width: 100%;
+    padding: 10px 16px 10px 36px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    outline: none;
+  }
+  
+  .search-icon {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    font-size: 16px;
+    color: #facc15;
+  }
+  
+  .add-btn {
+    background-color: #22c55e;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .inventory-table {
+    background: white;
+    border-radius: 10px;
+    overflow-x: auto;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+  
+  th, td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    color: #333;
+  }
+  
+  .edit-btn {
+    background-color: #facc15;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 12px;
+    margin-right: 5px;
+    cursor: pointer;
+    color: black;
+    font-weight: bold;
+  }
+  
+  .delete-btn {
+    background-color: #ef4444;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+  }
+  
