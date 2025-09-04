@@ -6,12 +6,12 @@ import { CirclePlus, Pencil, Trash2 } from 'lucide-react';
 import { useInventory } from '../context/InventoryContext';
 
 function Inventory() {
-  const { 
-    products, 
-    addProduct, 
-    updateProduct, 
-    deleteProduct, 
-    addStock 
+  const {
+    products,
+    addProduct,
+    updateProduct,
+    deleteProduct,
+    addStock
   } = useInventory();
 
   const [showAddModal, setShowAddModal] = useState(false);
@@ -21,6 +21,8 @@ function Inventory() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [totalExpenses, setTotalExpenses] = useState('');
+  const [sellingPrice, setSellingPrice] = useState('');
 
   // Handle image upload
   const handleImageUpload = (e) => {
@@ -50,6 +52,8 @@ function Inventory() {
       unit: form.unit.value,
       date: form.date.value,
       category: form.category.value,
+      totalExpenses: parseFloat(form.totalExpenses.value) || 0,
+      sellingPrice: parseFloat(form.sellingPrice.value) || 0,
       image: imagePreview || null, // Store the base64 image
     };
 
@@ -77,6 +81,8 @@ function Inventory() {
       unit: form.unit.value,
       date: form.date.value,
       category: form.category.value,
+      totalExpenses: parseFloat(form.totalExpenses.value) || 0,
+      sellingPrice: parseFloat(form.sellingPrice.value) || 0,
       image: imagePreview || currentProduct.image || null, // Keep existing image if no new one
     };
 
@@ -97,7 +103,7 @@ function Inventory() {
   const handleAddStock = (e) => {
     e.preventDefault();
     const addedQty = parseInt(e.target.qty.value);
-    
+
     addStock(currentProduct.name, addedQty);
     setShowStockModal(false);
 
@@ -142,14 +148,14 @@ function Inventory() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white rounded-xl shadow p-6 flex flex-col">
             <span className="text-yellow-500 font-medium mb-2">Categories</span>
-          <span className="text-2xl font-bold mb-3">
-        {[...new Set(products.map(p => p.category))].length}</span>
+            <span className="text-2xl font-bold mb-3">
+              {[...new Set(products.map(p => p.category))].length}</span>
           </div>
           <div className="bg-white rounded-xl shadow p-6 flex flex-col">
             <span className="text-red-500 font-medium mb-2">Total Product</span>
             <span className="text-2xl font-bold mb-3">{products.length}</span>
           </div>
-         
+
           <div className="bg-white rounded-xl shadow p-6 flex flex-col">
             <span className="text-purple-600 font-semibold text-sm mb-4"> Stock Monitoring</span>
             <div className="flex justify-between items-center mb-1">
@@ -184,7 +190,7 @@ function Inventory() {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-             <button
+              <button
                 className="btn btn-sm btn-primary text-white"
                 onClick={() => setShowAddModal(true)}>Add Product</button>
             </div>
@@ -198,6 +204,8 @@ function Inventory() {
                   <th className="px-4 py-2 whitespace-nowrap">Name</th>
                   <th className="px-4 py-2 whitespace-nowrap">Quantity</th>
                   <th className="px-4 py-2 whitespace-nowrap">Units</th>
+                  <th className="px-4 py-2 whitespace-nowrap">Total Expenses</th>
+                  <th className="px-4 py-2 whitespace-nowrap">Selling Price</th>
                   <th className="px-4 py-2 whitespace-nowrap">Date</th>
                   <th className="px-4 py-2 whitespace-nowrap">Status</th>
                   <th className="px-4 py-2 whitespace-nowrap">Category</th>
@@ -213,9 +221,9 @@ function Inventory() {
                     <tr key={index} className="border-b">
                       <td className="px-4 py-2">
                         {p.image ? (
-                          <img 
-                            src={p.image} 
-                            alt={p.name} 
+                          <img
+                            src={p.image}
+                            alt={p.name}
                             className="w-12 h-12 object-cover rounded-lg border"
                           />
                         ) : (
@@ -227,6 +235,8 @@ function Inventory() {
                       <td className="px-4 py-2">{p.name}</td>
                       <td className="px-4 py-2">{p.qty}</td>
                       <td className="px-4 py-2">{p.unit}</td>
+                      <td className="px-4 py-2">₱{p.totalExpenses ? p.totalExpenses.toFixed(2) : '0.00'}</td>
+                      <td className="px-4 py-2">₱{p.sellingPrice ? p.sellingPrice.toFixed(2) : '0.00'}</td>
                       <td className="px-4 py-2">{p.date}</td>
                       <td className="px-4 py-2">
                         <span
@@ -234,8 +244,8 @@ function Inventory() {
                             p.status === "In-stock"
                               ? "text-green-600"
                               : p.status === "Low stock"
-                              ? "text-yellow-600"
-                              : "text-red-600"
+                                ? "text-yellow-600"
+                                : "text-red-600"
                           }
                         >
                           {p.status}
@@ -285,9 +295,9 @@ function Inventory() {
                 <div className="flex items-center gap-4">
                   {imagePreview ? (
                     <div className="relative">
-                      <img 
-                        src={imagePreview} 
-                        alt="Preview" 
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
                         className="w-20 h-20 object-cover rounded-lg border"
                       />
                       <button
@@ -320,12 +330,30 @@ function Inventory() {
                   </div>
                 </div>
               </div>
-              
-              <input name="name" required placeholder="Name" className="w-full border px-3 py-2 rounded mb-4"/>
-              <input name="qty" type="number" required placeholder="Quantity" className="w-full border px-3 py-2 rounded mb-4"/>
-              <input name="unit" required placeholder="Unit" className="w-full border px-3 py-2 rounded mb-4"/>
-              <input name="date" type="date" required className="w-full border px-3 py-2 rounded mb-4"/>
-              <input name="category" required placeholder="Category" className="w-full border px-3 py-2 rounded mb-4"/>
+
+              <input name="name" required placeholder="Name" className="w-full border px-3 py-2 rounded mb-4" />
+              <input name="qty" type="number" required placeholder="Quantity" className="w-full border px-3 py-2 rounded mb-4" />
+              <input name="unit" required placeholder="Unit" className="w-full border px-3 py-2 rounded mb-4" />
+              <input name="date" type="date" required className="w-full border px-3 py-2 rounded mb-4" />
+              <input name="category" required placeholder="Category" className="w-full border px-3 py-2 rounded mb-4" />
+              <input
+                name="totalExpenses"
+                type="number"
+                step="0.01"
+                min="0"
+                required
+                placeholder="Total Expenses (₱)"
+                className="w-full border px-3 py-2 rounded mb-4"
+              />
+              <input
+                name="sellingPrice"
+                type="number"
+                step="0.01"
+                min="0"
+                required
+                placeholder="Selling Price (₱)"
+                className="w-full border px-3 py-2 rounded mb-4"
+              />
               <div className="flex justify-end gap-2">
                 <button type="button" onClick={() => { setShowAddModal(false); clearImage(); }} className="btn bg-gray-300">Cancel</button>
                 <button type="submit" className="btn bg-blue-600 text-black">Save</button>
@@ -337,16 +365,16 @@ function Inventory() {
         {/* Edit Product Modal */}
         {showEditModal && currentProduct && (
           <Modal title={`Edit ${currentProduct.name}`} onClose={() => { setShowEditModal(false); clearImage(); }}>
-            <form onSubmit={handleEditProduct} className="space-y-4">
-              {/* Image Upload Section */}
-              <div className="mb-4">
+            <form onSubmit={handleEditProduct} className="space-y-6">
+              {/* Image Upload Section - Full Width */}
+              <div className="w-full">
                 <label className="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
                 <div className="flex items-center gap-4">
                   {imagePreview || currentProduct.image ? (
                     <div className="relative">
-                      <img 
-                        src={imagePreview || currentProduct.image} 
-                        alt="Preview" 
+                      <img
+                        src={imagePreview || currentProduct.image}
+                        alt="Preview"
                         className="w-20 h-20 object-cover rounded-lg border"
                       />
                       <button
@@ -379,15 +407,82 @@ function Inventory() {
                   </div>
                 </div>
               </div>
-              
-              <input name="name" defaultValue={currentProduct.name} required className="w-full border px-3 py-2 rounded mb-4" />
-              <input name="qty" type="number" defaultValue={currentProduct.qty} required className="w-full border px-3 py-2 rounded mb-4" />
-              <input name="unit" defaultValue={currentProduct.unit} required className="w-full border px-3 py-2 rounded mb-4" />
-              <input name="date" type="date" defaultValue={currentProduct.date} required className="w-full border px-3 py-2 rounded mb-4" />
-              <input name="category" defaultValue={currentProduct.category} required placeholder="Category" className="w-full border px-3 py-2 rounded mb-4" />
-              <div className="flex justify-end gap-2">
-                <button type="button" onClick={() => { setShowEditModal(false); clearImage(); }} className="btn bg-gray-300">Cancel</button>
-                <button type="submit" className="btn bg-green-600 text-black">Update</button>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Name</span>
+                  </label>
+                  <input name="name" defaultValue={currentProduct.name} required className="w-full border px-3 py-2 rounded" />
+                </div>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Quantity</span>
+                  </label>
+                  <input name="qty" type="number" defaultValue={currentProduct.qty} required className="w-full border px-3 py-2 rounded" />
+                </div>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Unit</span>
+                  </label>
+                  <input name="unit" defaultValue={currentProduct.unit} required className="w-full border px-3 py-2 rounded" />
+                </div>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Date</span>
+                  </label>
+                  <input name="date" type="date" defaultValue={currentProduct.date} required className="w-full border px-3 py-2 rounded" />
+                </div>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Category</span>
+                  </label>
+                  <input name="category" defaultValue={currentProduct.category} required className="w-full border px-3 py-2 rounded" />
+                </div>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Total Expenses (₱)</span>
+                  </label>
+                  <input
+                    name="totalExpenses"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    required
+                    defaultValue={currentProduct.totalExpenses || 0}
+                    className="w-full border px-3 py-2 rounded"
+                  />
+                </div>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text">Selling Price (₱)</span>
+                  </label>
+                  <input
+                    name="sellingPrice"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    required
+                    defaultValue={currentProduct.sellingPrice || 0}
+                    className="w-full border px-3 py-2 rounded"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-6">
+                <button
+                  type="button"
+                  onClick={() => { setShowEditModal(false); clearImage(); }}
+                  className="btn bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn bg-green-600 hover:bg-green-700 text-gray px-4 py-2 rounded"
+                >
+                  Update
+                </button>
               </div>
             </form>
           </Modal>
@@ -413,10 +508,17 @@ function Inventory() {
 // Reusable Modal Component
 function Modal({ title, children, onClose }) {
   return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white w-full max-w-md rounded-xl shadow-lg p-6">
-        <h3 className="text-lg font-bold mb-4">{title}</h3>
-        {children}
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div className="bg-white w-full max-w-2xl max-h-[90vh] rounded-xl shadow-lg p-6 overflow-y-auto">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-bold">{title}</h3>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+            <X size={20} />
+          </button>
+        </div>
+        <div className="space-y-4">
+          {children}
+        </div>
       </div>
     </div>
   );
